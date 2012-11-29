@@ -20,10 +20,20 @@ function Message(message, date) {
 	};
 
 	Message.prototype.getHTMLText = function() {
-		// Ska implementeras
+		return this.getText().replace(/[\n\r]/g, "<br/>");
 	};
 
-	Message.prototype.getDateText = function() {
-		// ska implementeras
+	Message.prototype.getDateText = function(alertDate) {
+		var dateFormat = this.getDate();
+
+		if (alertDate === true) {
+			return "Inlägget skapades den " + dateFormat.getDate() + " " + dateFormat.getMonth() + " " + dateFormat.getFullYear() + " klockan " +
+					dateFormat.getHours() + ":" + dateFormat.getMinutes() + ":" + dateFormat.getSeconds();
+		}
+
+		else {
+			return dateFormat.getHours() + ":" + dateFormat.getMinutes() + ":" + dateFormat.getSeconds();
+		}
+
 	};
 }
