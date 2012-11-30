@@ -23,33 +23,53 @@ function MessageBoard(boardID) {
 	this.messages = [];
 
 	this.init  = function() {
-		var board = document.getElementById(boardID);
+		var wrapper = document.querySelector(".wrapper");
 
+		var board = document.getElementById(boardID);
+		var closeBoard = document.createElement("a");
 		var header = document.createElement("header");
 		var h1 = document.createElement("h1");
 		var messageBox = document.createElement("div");
 		var spanMessageCount = document.createElement("span");
 		var textarea = document.createElement("textarea");
 		var run = document.createElement("input");
+		var changeButton = document.createElement("input");
+
 
 		// Sätt attribut
+		closeBoard.setAttribute("href", "#");
+		closeBoard.setAttribute("class", "closeBoard");
+		closeBoard.textContent = "Stäng";
+
 		header.setAttribute("class", "header");
 		messageBox.setAttribute("class", "message-box");
 		spanMessageCount.setAttribute("class", "message-count");
-		run.setAttribute("class", "send");
+		textarea.setAttribute("autofocus", "autofocus");
+		run.setAttribute("class", "button send");
 		run.setAttribute("type", "submit");
 		run.setAttribute("value", "Skicka");
+		changeButton.setAttribute("type", "submit");
+		changeButton.setAttribute("value", "Change");
+		changeButton.setAttribute("class", "button change");
 
 		// Append
+		header.appendChild(closeBoard);
 		board.appendChild(header);
 		header.appendChild(h1);
-		h1.innerHTML = "LabbyMezzage";
+		h1.textContent = "LabbyMezzage";
 		board.appendChild(messageBox);
 		board.appendChild(spanMessageCount);
 		board.appendChild(textarea);
 		board.appendChild(run);
+		board.appendChild(changeButton);
 
 		run.addEventListener("click", that.newMessage, false);
+
+		// Stäng messageBoard
+		closeBoard.onclick = function() {
+			wrapper.removeChild(board);
+			return false;
+		};
 
 		// Lyssnar till enter
 		textarea.onkeydown = function(e) {
@@ -94,6 +114,7 @@ function MessageBoard(boardID) {
 				var deleteButton = document.createElement("a");
 				var timeButton = document.createElement("a");
 				var timeStamp = document.createElement("span");
+				var makeChange = document.createElement("a");
 
 				infoContainer.setAttribute("class", "info");
 				deleteButton.setAttribute("href", "#");
@@ -102,6 +123,9 @@ function MessageBoard(boardID) {
 				timeButton.setAttribute("class", "time");
 				messageContainer.setAttribute("class", "message");
 				timeStamp.setAttribute("class", "time-stamp");
+				makeChange.setAttribute("href", "#");
+				makeChange.setAttribute("class", "changeMessage");
+				makeChange.innerHTML = "(Edit message)";
 
 				// Lägger till meddelandet
 				text.innerHTML = that.messages[messageID].getHTMLText();
@@ -115,14 +139,16 @@ function MessageBoard(boardID) {
 				infoContainer.appendChild(timeButton);
 				infoContainer.appendChild(deleteButton);
 				messageContainer.appendChild(timeStamp);
+				messageContainer.appendChild(makeChange);
 
 				// Ta bort meddelande
 				deleteButton.onclick = function() {
+					var textbox = document.querySelector("#" +boardID+ " textarea");
 					if (window.confirm("Vill du verkligen radera meddelandet?")) {
-						console.log(messageID);
 						that.removeMessage(messageID);
 						messageArea.innerHTML = "";
 						that.renderMessages();
+						textbox.focus();
 					}
 
 					return false;
@@ -131,6 +157,12 @@ function MessageBoard(boardID) {
 				// Visa tid i alert
 				timeButton.onclick = function() {
 					that.alertTime(messageID);
+					return false;
+				};
+
+				// Redigera meddelande
+				makeChange.onclick = function() {
+					that.editMessage(messageID);
 					return false;
 				};
 		}
@@ -143,5 +175,19 @@ function MessageBoard(boardID) {
 
 	this.alertTime = function(messageID) {
 		alert(this.messages[messageID].getDateText(true));
+	};
+
+	this.editMessage = function(messageID) {
+		var changeButton = document.querySelector("#" +boardID+ " .change");
+		var textbox = document.querySelector("#" +boardID+ " textarea");
+		textbox.value = this.messages[messageID].getHTMLText();
+		textbox.select();
+
+		changeButton.onclick = function() {
+			that.messages[messageID].setText(textbox.value);
+			textbox.value = "";
+			that.renderMessages();
+			return false;
+		};
 	};
 }

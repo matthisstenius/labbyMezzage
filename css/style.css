@@ -8,6 +8,10 @@ body {
 	font-family: helvetica, sans-serif;
 }
 
+a {
+	text-decoration: none;
+}
+
 .newMessageBoard {
 	display: block;
 	background-image: -webkit-linear-gradient(bottom, #429212, #5cc51d);
@@ -17,7 +21,6 @@ body {
 	background-image: linear-gradient(bottom, #429212, #5cc51d);
 	color: #fff;
 	text-align: center;
-	text-decoration: none;
 	font-weight: bold;
 	padding: 10px 0;
 }
@@ -35,6 +38,12 @@ body {
 	background-color: #E9EFF2;
 	border-radius: 3px;
 	overflow: hidden;
+}
+
+.closeBoard {
+	float: right;
+	color: #fff;
+	padding: 5px 5px 0 0;
 }
 
 .header {
@@ -71,12 +80,21 @@ body {
 	float: left;
 }
 
-.time-stamp {
-	clear: left;
+.time-stamp, .changeMessage {
+
 	display: block;
-	color: #ccc;
 	font-size: 13px;
 	font-style: italic;
+}
+
+.time-stamp {
+	clear: left;
+	color: #ccc;
+}
+
+.changeMessage {
+	float: right;
+	color: #2A8FBD;
 }
 
 .info a {
@@ -124,9 +142,21 @@ input[type="submit"] {
 	border: none;
 	color: #fff;
 	padding: 5px;
+}
+
+.send {
 	background-image: -webkit-linear-gradient(bottom, #429212, #5cc51d);
 	background-image: -moz-linear-gradient(bottom, #429212, #5cc51d);
 	background-image: -o-linear-gradient(bottom, #429212, #5cc51d);
 	background-image: -ms-linear-gradient(bottom, #429212, #5cc51d);
 	background-image: linear-gradient(bottom, #429212, #5cc51d);
+}
+
+.change {
+
+	background-image: -webkit-linear-gradient(bottom, #b72d16, #cd3217);
+	background-image: -moz-linear-gradient(bottom, #b72d16, #cd3217);
+	background-image: -o-linear-gradient(bottom, #b72d16, #cd3217;
+	background-image: -ms-linear-gradient(bottom, #b72d16, #cd3217);
+	background-image: linear-gradient(bottom, #b72d16, #cd3217);
 }
