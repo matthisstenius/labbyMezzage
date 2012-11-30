@@ -1,9 +1,20 @@
 window.onload = function() {
-	var board1 = new MessageBoard("board1");
-	var board2 = new MessageBoard("board2");
+	var newMessageBoard = document.querySelector(".newMessageBoard");
+	var counterMessageBoard = 0;
 
-	board1.init();
-	board2.init();
+	newMessageBoard.onclick = function() {
+		var wrapper = document.querySelector(".wrapper");
+		var newBoard = document.createElement("div");
+		newBoard.setAttribute("id", "board" +counterMessageBoard);
+		wrapper.appendChild(newBoard);
+
+		var board = new MessageBoard("board" +counterMessageBoard);
+		board.init();
+
+		counterMessageBoard += 1;
+		console.log(counterMessageBoard);
+		return false;
+	};
 };
 
 function MessageBoard(boardID) {

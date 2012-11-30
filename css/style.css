@@ -8,23 +8,33 @@ body {
 	font-family: helvetica, sans-serif;
 }
 
+.newMessageBoard {
+	display: block;
+	background-image: -webkit-linear-gradient(bottom, #429212, #5cc51d);
+	background-image: -moz-linear-gradient(bottom, #429212, #5cc51d);
+	background-image: -o-linear-gradient(bottom, #429212, #5cc51d);
+	background-image: -ms-linear-gradient(bottom, #429212, #5cc51d);
+	background-image: linear-gradient(bottom, #429212, #5cc51d);
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	padding: 10px 0;
+}
+
 .wrapper {
 	width: 1140px;
 	margin: 0 auto;
 }
 
-#board1, #board2 {
+.wrapper > div {
 	width: 550px;
 	float: left;
-	margin-top: 20px;
+	margin: 20px 20px 0 0;
 	padding-bottom: 20px;
 	background-color: #E9EFF2;
 	border-radius: 3px;
 	overflow: hidden;
-}
-
-#board1 {
-	margin-right: 20px;
 }
 
 .header {
