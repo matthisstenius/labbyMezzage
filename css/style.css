@@ -9,12 +9,22 @@ body {
 }
 
 .wrapper {
-	width: 700px;
-	margin: 20px auto;
+	width: 1140px;
+	margin: 0 auto;
+}
+
+#board1, #board2 {
+	width: 550px;
+	float: left;
+	margin-top: 20px;
 	padding-bottom: 20px;
 	background-color: #E9EFF2;
 	border-radius: 3px;
 	overflow: hidden;
+}
+
+#board1 {
+	margin-right: 20px;
 }
 
 .header {

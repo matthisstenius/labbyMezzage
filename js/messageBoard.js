@@ -1,106 +1,136 @@
-MessageBoard = {
+window.onload = function() {
+	var board1 = new MessageBoard("board1");
+	var board2 = new MessageBoard("board2");
 
-	messages: [],
+	board1.init();
+	board2.init();
+};
 
-	init : window.onload = function() {
-		var textBox = document.querySelector(".wrapper textarea");
-		var run = document.getElementById("send");
+function MessageBoard(boardID) {
+	var that = this;
 
-		run.addEventListener("click", newMessage, false);
+	this.messages = [];
+
+	this.init  = function() {
+		var board = document.getElementById(boardID);
+
+		var header = document.createElement("header");
+		var h1 = document.createElement("h1");
+		var messageBox = document.createElement("div");
+		var spanMessageCount = document.createElement("span");
+		var textarea = document.createElement("textarea");
+		var run = document.createElement("input");
+
+		// Sätt attribut
+		header.setAttribute("class", "header");
+		messageBox.setAttribute("class", "message-box");
+		spanMessageCount.setAttribute("class", "message-count");
+		run.setAttribute("class", "send");
+		run.setAttribute("type", "submit");
+		run.setAttribute("value", "Skicka");
+
+		// Append
+		board.appendChild(header);
+		header.appendChild(h1);
+		h1.innerHTML = "LabbyMezzage";
+		board.appendChild(messageBox);
+		board.appendChild(spanMessageCount);
+		board.appendChild(textarea);
+		board.appendChild(run);
+
+		run.addEventListener("click", that.newMessage, false);
 
 		// Lyssnar till enter
-		textBox.onkeydown = function(e) {
+		textarea.onkeydown = function(e) {
 			if (!e) { e = window.event; }
 			if (e.keyCode === 13 && e.shiftKey === false) {
-				newMessage();
+				that.newMessage();
 				return false;
 			}
 		};
+	};
 
-		function newMessage() {
-			var text = document.querySelector(".wrapper textarea");
+	this.newMessage = function() {
+		var text = document.querySelector("#" +boardID+ " textarea");
 
-			var messObj = new Message(text.value, new Date());
+		var messObj = new Message(text.value, new Date());
+		that.messages.push(messObj);
+		that.renderMessages();
 
-			MessageBoard.messages.push(messObj);
-			MessageBoard.renderMessages();
+		// Rensar textrutan på text
+		text.value = "";
+	};
 
-			// Rensar textrutan på text
-			text.value = "";
-		}
-	},
-
-	renderMessages : function() {
+	this.renderMessages = function() {
+		var messageArea = document.querySelector("#" +boardID+ " .message-box");
 		// Tar bort alla meddelanden
-		var messageArea = document.querySelector(".message-box");
 		messageArea.innerHTML = "";
 
 		// Sätter antal meddelanden
-		var messageCounter = document.querySelector(".message-count");
-		messageCounter.innerHTML = "Antal meddelanden: " + MessageBoard.messages.length;
+		var messageCounter = document.querySelector("#" +boardID+ " .message-count");
 
-		for (var i = 0; i < MessageBoard.messages.length; i += 1) {
+		messageCounter.innerHTML = "Antal meddelanden: " + this.messages.length;
+
+		for (var i = 0; i < this.messages.length; i += 1) {
 			renderMessage(i);
 		}
 
-		// Skriv ut ett meddelande
-		function renderMessage(messageID) {
+			function renderMessage(messageID) {
 
+				var text = document.createElement("p");
+				var messageContainer = document.createElement("article");
+				var infoContainer = document.createElement("div");
+				var deleteButton = document.createElement("a");
+				var timeButton = document.createElement("a");
+				var timeStamp = document.createElement("span");
 
+				infoContainer.setAttribute("class", "info");
+				deleteButton.setAttribute("href", "#");
+				deleteButton.setAttribute("class", "delete");
+				timeButton.setAttribute("href", "#");
+				timeButton.setAttribute("class", "time");
+				messageContainer.setAttribute("class", "message");
+				timeStamp.setAttribute("class", "time-stamp");
 
-			var text = document.createElement("p");
-			var messageContainer = document.createElement("article");
-			var infoContainer = document.createElement("div");
-			var deleteButton = document.createElement("a");
-			var timeButton = document.createElement("a");
-			var timeStamp = document.createElement("span");
+				// Lägger till meddelandet
+				text.innerHTML = that.messages[messageID].getHTMLText();
 
-			infoContainer.setAttribute("class", "info");
-			deleteButton.setAttribute("href", "#");
-			deleteButton.setAttribute("class", "delete");
-			timeButton.setAttribute("href", "#");
-			timeButton.setAttribute("class", "time");
-			messageContainer.setAttribute("class", "message");
-			timeStamp.setAttribute("class", "time-stamp");
+				// Sätter tidstämpel formaterad till timmar, minuter och sekunder
+				timeStamp.innerHTML = that.messages[messageID].getDateText();
 
-			// Lägger till meddelandet
-			text.innerHTML = MessageBoard.messages[messageID].getHTMLText();
+				messageArea.appendChild(messageContainer);
+				messageContainer.appendChild(text);
+				messageContainer.appendChild(infoContainer);
+				infoContainer.appendChild(timeButton);
+				infoContainer.appendChild(deleteButton);
+				messageContainer.appendChild(timeStamp);
 
-			// Sätter tidstämpel formaterad till timmar, minuter och sekunder
-			timeStamp.innerHTML = MessageBoard.messages[messageID].getDateText();
+				// Ta bort meddelande
+				deleteButton.onclick = function() {
+					if (window.confirm("Vill du verkligen radera meddelandet?")) {
+						console.log(messageID);
+						that.removeMessage(messageID);
+						messageArea.innerHTML = "";
+						that.renderMessages();
+					}
 
-			messageArea.appendChild(messageContainer);
-			messageContainer.appendChild(text);
-			messageContainer.appendChild(infoContainer);
-			infoContainer.appendChild(timeButton);
-			infoContainer.appendChild(deleteButton);
-			messageContainer.appendChild(timeStamp);
+					return false;
+				};
 
-			// Ta bort meddelande
-			deleteButton.onclick = function() {
-
-				if (window.confirm("Vill du verkligen radera meddelandet?")) {
-					MessageBoard.removeMessage(messageID);
-					messageArea.innerHTML = "";
-					MessageBoard.renderMessages();
-				}
-
-				return false;
-			};
-
-			// Visa tid i alert
-			timeButton.onclick = function() {
-				MessageBoard.alertTime(messageID);
-				return false;
-			};
+				// Visa tid i alert
+				timeButton.onclick = function() {
+					that.alertTime(messageID);
+					return false;
+				};
 		}
-	},
 
-	removeMessage : function(messageID) {
-		MessageBoard.messages.splice(messageID, 1);
-	},
+	};
 
-	alertTime : function(messageID) {
-		alert(MessageBoard.messages[messageID].getDateText(true));
-	}
-};
+	this.removeMessage = function(messageID) {
+		this.messages.splice(messageID, 1);
+	};
+
+	this.alertTime = function(messageID) {
+		alert(this.messages[messageID].getDateText(true));
+	};
+}
